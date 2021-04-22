@@ -42,5 +42,10 @@ namespace RSASocketServer
             }
             Console.WriteLine("closing client");
         }
+        public void Close()
+        {
+            Cryptor.DeleteKeyInCsp();
+            client.Close();
+        }
     }
 }

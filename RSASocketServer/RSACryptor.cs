@@ -7,17 +7,33 @@ namespace RSASocketServer
 {
     class RSACryptor
     {
+        string ContainerName;
         readonly RSACryptoServiceProvider rsa;
         public RSACryptor()
         {
-            rsa = new RSACryptoServiceProvider();
+            rsa = CreateRSA();
         }
         public RSACryptor(int bitsAmount)
         {
-            rsa = new RSACryptoServiceProvider(bitsAmount);
+            rsa = CreateRSA(bitsAmount);
         }
 
+        private RSACryptoServiceProvider CreateRSA(int bitAmount = 2048)
+        {
+            CspParameters cspParams = new CspParameters(1);
+            cspParams.KeyContainerName = ContainerName;
+            cspParams.Flags = CspProviderFlags.UseMachineKeyStore;
+            cspParams.ProviderName = "Microsoft Strong Cryptographic Provider";
+            return new RSACryptoServiceProvider(bitAmount, cspParams) { PersistKeyInCsp = true };
+        }
 
+        public void DeleteKeyInCsp()
+        {
+            var cspParams = new CspParameters { KeyContainerName = ContainerName };
+            var rsa = new RSACryptoServiceProvider(cspParams) { PersistKeyInCsp = false };
+
+            rsa.Clear();
+        }
         public string Decrypt(string encryptedData)
         {
             try

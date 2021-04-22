@@ -53,6 +53,10 @@ namespace RSASocketServer
         /// </summary>
         public void Close()
         {
+            for (int i = 0; i < clients.Count; i++)
+            {
+                clients[i].Close();
+            }
             connectionAllowed = false;
             server.Stop();
         }
