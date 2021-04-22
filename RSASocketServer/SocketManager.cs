@@ -14,13 +14,15 @@ namespace RSASocketServer
         TcpListener server;
         List<ClientHandler> clients;
 
+        /// <summary>
+        /// Starts getting clients
+        /// </summary>
         public async Task Start()
         {
             await Task.Delay(1);
             clients = new List<ClientHandler>();
             connectionAllowed = true;
-            //string ip = LocalIPAddress().ToString();
-            string ip = "10.108.169.20";
+            string ip = LocalIPAddress().ToString();
             int port = 5001;
 
             server = new TcpListener(IPAddress.Parse(ip), port);
